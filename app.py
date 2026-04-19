@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect
-
+ADMIN_PASSWORD = "admin123"
 app = Flask(__name__)
 
 # ================= DSA STRUCTURES =================
@@ -131,6 +131,20 @@ def result():
         search_user=search_user,
         found=found
     )
+
+@app.route("/reset", methods=["POST"])
+def reset():
+    global votes, voted_users, vote_list
+
+    password = request.form.get("password")
+
+    if password == ADMIN_PASSWORD:
+        votes = {"A": 0, "B": 0, "C": 0}
+        voted_users = set()
+        vote_list = VoteLinkedList()
+        return redirect("/")
+    else:
+        return "❌ Wrong Password!"
 
 # Run Server
 if __name__ == "__main__":
