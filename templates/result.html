@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="container">
+    <h2>📊 Voting Results</h2>
+
+    <!-- Leaderboard -->
+    <h3>🏅 Leaderboard</h3>
+    {% for c, v in results %}
+        <div class="result-box">
+            Candidate {{c}} : {{v}} votes
+        </div>
+    {% endfor %}
+
+    <!-- Winner -->
+    <h2>🏆 Winner: Candidate {{winner}}</h2>
+
+    <hr>
+
+    <!-- Graph -->
+    <h3>📊 Vote Graph</h3>
+    <canvas id="voteChart" width="300" height="200"></canvas>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const labels = {{ labels | tojson }};
+        const data = {{ values | tojson }};
+
+        const ctx = document.getElementById('voteChart').getContext('2d');
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Votes',
+                    data: data
+                }]
+            }
+        });
+    </script>
+
+    <hr>
+
+    <!-- Linked List Vote History -->
+    <h3>📜 Vote History (Linked List)</h3>
+
+    {% if all_votes %}
+        {% for user, candidate in all_votes %}
+            <p>{{user}} → Candidate {{candidate}}</p>
+        {% endfor %}
+    {% else %}
+        <p>No votes yet</p>
+    {% endif %}
+
+    <hr>
+
+    <!-- Binary Search Input -->
+    <h3>🔍 Search Voter (Binary Search)</h3>
+
+    <form method="POST">
+        <input type="text" name="search_user" placeholder="Enter name to search" required>
+        <button type="submit">Search</button>
+    </form>
+
+    <br>
+
+    {% if search_user is not none %}
+        <p>Searching for: <b>{{search_user}}</b></p>
+
+        {% if found %}
+            <p style="color: green;">✅ User found (has voted)</p>
+        {% else %}
+            <p style="color: red;">❌ User not found</p>
+        {% endif %}
+    {% endif %}
+
+    <br>
+
+    <!-- Navigation -->
+    <a href="/"><button>🏠 Home</button></a>
+    <a href="/vote"><button>🗳 Vote Again</button></a>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Vote</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="container">
+    <h2>🗳 Cast Your Vote</h2>
+
+    <form method="POST">
+
+        <input type="text" name="user" placeholder="Enter your name" required>
+
+        <h3>Select Candidate:</h3>
+
+        <label>
+            <input type="radio" name="candidate" value="A" required>
+            Candidate A
+        </label><br>
+
+        <label>
+            <input type="radio" name="candidate" value="B">
+            Candidate B
+        </label><br>
+
+        <label>
+            <input type="radio" name="candidate" value="C">
+            Candidate C
+        </label><br><br>
+
+        <button type="submit">Submit Vote</button>
+    </form>
+
+    <br>
+
+    <a href="/">
+        <button>⬅ Back to Home</button>
+    </a>
+
+</div>
+
+</body>
+</html>
