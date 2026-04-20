@@ -26,20 +26,22 @@
     <h3>📊 Vote Graph</h3>
     <canvas id="voteChart" width="300" height="200"></canvas>
 
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <script>
-        const labels = {{ labels | tojson }};
-        const data = {{ values | tojson }};
+        const chartLabels = JSON.parse('{{ labels | tojson | safe }}');
+        const chartData = JSON.parse('{{ values | tojson | safe }}');
 
         const ctx = document.getElementById('voteChart').getContext('2d');
 
         new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: labels,
+                labels: chartLabels,
                 datasets: [{
                     label: 'Votes',
-                    data: data
+                    data: chartData
                 }]
             }
         });
@@ -47,20 +49,7 @@
 
     <hr>
 
-    <!-- Linked List Vote History -->
-    <h3>📜 Vote History (Linked List)</h3>
-
-    {% if all_votes %}
-        {% for user, candidate in all_votes %}
-            <p>{{user}} → Candidate {{candidate}}</p>
-        {% endfor %}
-    {% else %}
-        <p>No votes yet</p>
-    {% endif %}
-
-    <hr>
-
-    <!-- Binary Search Input -->
+    <!-- Binary Search -->
     <h3>🔍 Search Voter (Binary Search)</h3>
 
     <form method="POST">
@@ -74,11 +63,42 @@
         <p>Searching for: <b>{{search_user}}</b></p>
 
         {% if found %}
-            <p style="color: green;">✅ User found (has voted)</p>
+            <p style="color: green;">✅ User found</p>
         {% else %}
             <p style="color: red;">❌ User not found</p>
         {% endif %}
     {% endif %}
+
+    <hr>
+
+    <!-- 🔐 Admin Vote History -->
+    <h3>🔐 View Vote History (Admin Only)</h3>
+
+    <form method="POST">
+        <input type="password" name="admin_password" placeholder="Enter admin password" required>
+        <button type="submit">View History</button>
+    </form>
+
+    {% if password_error %}
+        <p style="color:red;">❌ Wrong Password</p>
+    {% endif %}
+
+    {% if show_history %}
+        <h3>📜 Vote History</h3>
+        {% for user, candidate in all_votes %}
+            <p>{{user}} → Candidate {{candidate}}</p>
+        {% endfor %}
+    {% endif %}
+
+    <hr>
+
+    <!-- 🔐 Reset -->
+    <h3>🔐 Reset Voting (Admin Only)</h3>
+
+    <form method="POST" action="/reset">
+        <input type="password" name="password" placeholder="Enter admin password" required>
+        <button type="submit" style="background:red; color:white;">Reset Voting</button>
+    </form>
 
     <br>
 
@@ -87,16 +107,6 @@
     <a href="/vote"><button>🗳 Vote Again</button></a>
 
 </div>
-<hr>
-
-<h3>🔐 Reset Voting (Admin Only)</h3>
-
-<form method="POST" action="/reset">
-    <input type="password" name="password" placeholder="Enter admin password" required>
-    <button type="submit" style="background:red; color:white;">Reset Voting</button>
-</form>
-
-
 
 </body>
 </html>
