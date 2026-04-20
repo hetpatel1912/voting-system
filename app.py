@@ -148,7 +148,7 @@ def reset():
     password = request.form.get("password")
 
     if password == ADMIN_PASSWORD:
-        votes = {"A": 0, "B": 0, "C": 0}
+        votes = {"BJP": 0, "CONGRESS": 0, "NOTA": 0}
         voted_users = set()
         vote_list = VoteLinkedList()
         return redirect("/")
